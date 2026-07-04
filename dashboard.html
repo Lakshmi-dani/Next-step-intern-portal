@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — NextStep{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
+    <div class="stat-info">
+      <span class="stat-value">{{ stats.total_interns }}</span>
+      <span class="stat-label">Total Interns</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="stat-info">
+      <span class="stat-value">{{ stats.active }}</span>
+      <span class="stat-label">Active</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon yellow"><i class="fa-solid fa-clock"></i></div>
+    <div class="stat-info">
+      <span class="stat-value">{{ stats.pending }}</span>
+      <span class="stat-label">Pending</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon purple"><i class="fa-solid fa-list-check"></i></div>
+    <div class="stat-info">
+      <span class="stat-value">{{ stats.tasks_done }}</span>
+      <span class="stat-label">Tasks Completed</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-row">
+  <div class="card flex-1">
+    <div class="card-header">
+      <h2><i class="fa-solid fa-bullhorn"></i> Announcements</h2>
+      <a href="{{ url_for('announcements_list') }}" class="btn btn-sm">View All</a>
+    </div>
+    <div class="card-body">
+      {% for ann in announcements %}
+      <div class="announcement-item">
+        <div class="ann-title">{{ ann.title }}</div>
+        <div class="ann-body">{{ ann.body }}</div>
+        <div class="ann-date"><i class="fa-regular fa-calendar"></i> {{ ann.date }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card flex-1">
+    <div class="card-header">
+      <h2><i class="fa-solid fa-chart-pie"></i> Overview</h2>
+    </div>
+    <div class="card-body">
+      <canvas id="statusChart" width="300" height="220"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  fetch("/api/stats").then(r => r.json()).then(data => {
+    const ctx = document.getElementById("statusChart").getContext("2d");
+    new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Active", "Pending"],
+        datasets: [{
+          data: [data.active, data.interns - data.active],
+          backgroundColor: ["#4f46e5", "#f59e0b"],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: { legend: { position: "bottom" } },
+        cutout: "65%"
+      }
+    });
+  });
+</script>
+{% endblock %}

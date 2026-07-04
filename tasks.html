@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Tasks — NextStep{% endblock %}
+{% block page_title %}Tasks{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fa-solid fa-list-check"></i> All Tasks</h2>
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+      <button class="filter-btn" data-filter="in-progress">In Progress</button>
+      <button class="filter-btn" data-filter="pending">Pending</button>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="data-table" id="tasksTable">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Assigned To</th>
+          <th>Due Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+        <tr data-status="{{ task.status | lower | replace(' ', '-') }}">
+          <td>{{ task.title }}</td>
+          <td>{{ task.intern_name }}</td>
+          <td>{{ task.due_date }}</td>
+          <td><span class="badge badge-{{ task.status | lower | replace(' ', '-') }}">{{ task.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+      const filter = this.dataset.filter;
+      document.querySelectorAll("#tasksTable tbody tr").forEach(row => {
+        row.style.display = (filter === "all" || row.dataset.status === filter) ? "" : "none";
+      });
+    });
+  });
+</script>
+{% endblock %}

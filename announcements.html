@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Announcements — NextStep{% endblock %}
+{% block page_title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="announcements-grid">
+  {% for ann in announcements %}
+  <div class="card announcement-card">
+    <div class="ann-card-icon"><i class="fa-solid fa-bullhorn"></i></div>
+    <div class="ann-card-content">
+      <h3>{{ ann.title }}</h3>
+      <p>{{ ann.body }}</p>
+      <span class="ann-date"><i class="fa-regular fa-calendar"></i> {{ ann.date }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

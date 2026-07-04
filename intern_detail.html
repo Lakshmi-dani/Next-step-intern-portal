@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ intern.name }} — NextStep{% endblock %}
+{% block page_title %}Intern Profile{% endblock %}
+
+{% block content %}
+<div class="section-row">
+  <div class="card profile-card">
+    <div class="profile-avatar">{{ intern.name[0] }}</div>
+    <h2 class="profile-name">{{ intern.name }}</h2>
+    <span class="badge badge-{{ intern.status | lower }}">{{ intern.status }}</span>
+    <div class="profile-details">
+      <div class="detail-row"><i class="fa-solid fa-building"></i> {{ intern.department }}</div>
+      <div class="detail-row"><i class="fa-regular fa-calendar"></i> Started {{ intern.start_date }}</div>
+    </div>
+    <a href="{{ url_for('interns_list') }}" class="btn btn-sm" style="margin-top:1rem;">
+      <i class="fa-solid fa-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <div class="card flex-1">
+    <div class="card-header">
+      <h2><i class="fa-solid fa-list-check"></i> Tasks</h2>
+    </div>
+    <div class="card-body">
+      {% if tasks %}
+        {% for task in tasks %}
+        <div class="task-item">
+          <div class="task-info">
+            <div class="task-title">{{ task.title }}</div>
+            <div class="task-due"><i class="fa-regular fa-clock"></i> Due: {{ task.due_date }}</div>
+          </div>
+          <span class="badge badge-{{ task.status | lower | replace(' ', '-') }}">{{ task.status }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty-state">No tasks assigned yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
